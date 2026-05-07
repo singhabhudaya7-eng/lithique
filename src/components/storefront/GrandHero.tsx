@@ -49,7 +49,7 @@ export function GrandHero() {
         transition: 'opacity 1800ms var(--ease-luxury) 500ms, transform 1800ms var(--ease-luxury) 500ms',
       }}>
         <p className="t-label" style={{ marginBottom: 'clamp(20px, 4vh, 40px)', opacity: 0.8 }}>
-          Mumbai · Est. 2024
+          Mumbai · Delhi-NCR · Est. 2017  
         </p>
 
         <h1 className="t-hero" style={{ maxWidth: '960px', marginBottom: 'clamp(24px, 5vh, 48px)' }}>
