@@ -1,0 +1,23 @@
+
+> lithique-by-shweta@0.1.0 dev
+> next dev
+
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3000
+  - Environments: .env
+
+ ✓ Starting...
+ ✓ Ready in 1702ms
+ ○ Compiling / ...
+ ✓ Compiled / in 4.9s (612 modules)
+ GET / 200 in 5259ms
+ ✓ Compiled in 308ms (284 modules)
+ ✓ Compiled /relics in 349ms (610 modules)
+ GET /relics 200 in 612ms
+ ✓ Compiled /_not-found in 390ms (599 modules)
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 258ms
+ ✓ Compiled /favicon.ico in 259ms (357 modules)
+ GET /favicon.ico 200 in 319ms
+ GET /relics 200 in 85ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 40ms
+ GET /favicon.ico 200 in 12ms

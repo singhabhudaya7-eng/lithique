@@ -1,0 +1,71 @@
+generator client {
+  provider   = "prisma-client-js"
+  output     = "../src/generated/prisma"
+  engineType = "library"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Relic {
+  id           String      @id @default(cuid())
+  slug         String      @unique
+  name         String
+  tagline      String
+  description  String
+  tier         RelicTier
+  priceMin     Int
+  priceMax     Int?
+  nfcId        String?     @unique
+  modelUrl     String?
+  imageUrls    String[]
+  published    Boolean     @default(false)
+  inquiryOpen  Boolean     @default(true)
+  provenance   Provenance?
+  inquiries    Inquiry[]
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
+
+model Provenance {
+  id             String   @id @default(cuid())
+  relicId        String   @unique
+  relic          Relic    @relation(fields: [relicId], references: [id], onDelete: Cascade)
+  quarryName     String
+  quarryRegion   String
+  stoneType      String
+  artisanName    String
+  artisanAtelier String?
+  creationDate   DateTime
+  ownerChain     Json     @default("[]")
+  notes          String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Inquiry {
+  id          String        @id @default(cuid())
+  relicId     String
+  relic       Relic         @relation(fields: [relicId], references: [id], onDelete: Cascade)
+  clientName  String
+  clientEmail String
+  clientPhone String?
+  message     String
+  isWaitlist  Boolean       @default(false)
+  status      InquiryStatus @default(PENDING)
+  createdAt   DateTime      @default(now())
+}
+
+enum RelicTier {
+  ENTRY
+  COLLECTOR
+  COMMISSION
+}
+
+enum InquiryStatus {
+  PENDING
+  REVIEWED
+  REPLIED
+  CLOSED
+}
