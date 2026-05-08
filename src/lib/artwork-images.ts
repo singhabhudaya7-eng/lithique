@@ -37,4 +37,6 @@ export const HER_WORK = {
   tanjoreMockup: `${SHWET}/Design%209%20(4).c99c002f148341fec30c.png`,
   decoupage: `${SHWET}/IMG_4439%20(1).6c8f489446734d5627d8.jpeg`,
   canvas: `${SHWET}/pixelcut-export.95095ed9e421629192e3.png`,
+  // Two Tanjore paintings on a wall — we crop to just the top deity face
+  tanjoureDiptych: `${SHWET}/tanjouronwall%20(1).49020943cebd1962309b.png`,
 }

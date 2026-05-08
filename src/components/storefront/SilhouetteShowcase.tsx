@@ -2,12 +2,13 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { HER_WORK } from '@/lib/artwork-images'
 
 interface SilhouettePanelProps {
   bgImage: string
   revealImage?: string
+  bgPosition?: string
   index: number
   medium: string
   title: string
@@ -15,13 +16,33 @@ interface SilhouettePanelProps {
   href: string
 }
 
-function SilhouettePanel({ bgImage, revealImage, index, medium, title, line, href }: SilhouettePanelProps) {
+function SilhouettePanel({ bgImage, revealImage, bgPosition = 'center', index, medium, title, line, href }: SilhouettePanelProps) {
   const [hovered, setHovered] = useState(false)
+  const [inView, setInView] = useState(false)
+  const [isTouch, setIsTouch] = useState(false)
+  const panelRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    setIsTouch(window.matchMedia('(hover: none)').matches)
+  }, [])
+
+  useEffect(() => {
+    if (!panelRef.current) return
+    const observer = new IntersectionObserver(
+      ([entry]) => setInView(entry.intersectionRatio >= 0.55),
+      { threshold: 0.55 }
+    )
+    observer.observe(panelRef.current)
+    return () => observer.disconnect()
+  }, [])
+
+  const revealed = isTouch ? inView : hovered
 
   return (
     <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      ref={panelRef}
+      onMouseEnter={() => !isTouch && setHovered(true)}
+      onMouseLeave={() => !isTouch && setHovered(false)}
       style={{
         position: 'relative',
         width: '100%',
@@ -34,7 +55,7 @@ function SilhouettePanel({ bgImage, revealImage, index, medium, title, line, hre
       {/* === SILHOUETTE LAYER === */}
       <div style={{
         position: 'absolute', inset: 0,
-        opacity: hovered && revealImage ? 0 : 1,
+        opacity: revealed && revealImage ? 0 : 1,
         transition: 'opacity 1000ms cubic-bezier(0.16,1,0.3,1)',
       }}>
         <Image
@@ -43,8 +64,7 @@ function SilhouettePanel({ bgImage, revealImage, index, medium, title, line, hre
           fill
           style={{
             objectFit: 'cover',
-            objectPosition: 'center',
-            // Silhouette treatment — dark but form is legible
+            objectPosition: bgPosition,
             filter: 'brightness(0.38) contrast(1.5) saturate(0.45)',
           }}
           sizes="100vw"
@@ -66,7 +86,7 @@ function SilhouettePanel({ bgImage, revealImage, index, medium, title, line, hre
       {revealImage && (
         <div style={{
           position: 'absolute', inset: 0,
-          opacity: hovered ? 1 : 0,
+          opacity: revealed ? 1 : 0,
           transition: 'opacity 900ms cubic-bezier(0.16,1,0.3,1)',
         }}>
           <Image
@@ -75,7 +95,7 @@ function SilhouettePanel({ bgImage, revealImage, index, medium, title, line, hre
             fill
             style={{
               objectFit: 'cover',
-              objectPosition: 'center',
+              objectPosition: bgPosition,
               filter: 'brightness(0.6) contrast(1.1)',
             }}
             sizes="100vw"
@@ -94,7 +114,7 @@ function SilhouettePanel({ bgImage, revealImage, index, medium, title, line, hre
         [index % 2 === 0 ? 'left' : 'right']: 0,
         width: '1px',
         background: 'linear-gradient(to bottom, transparent, rgba(184,146,42,0.5), transparent)',
-        opacity: hovered ? 0.2 : 0.5,
+        opacity: revealed ? 0.2 : 0.5,
         transition: 'opacity 600ms ease',
       }} />
 
@@ -157,8 +177,8 @@ function SilhouettePanel({ bgImage, revealImage, index, medium, title, line, hre
         </Link>
       </div>
 
-      {/* Hover instruction */}
-      {revealImage && (
+      {/* Reveal instruction — desktop: hover, mobile: scroll */}
+      {revealImage && !revealed && (
         <p style={{
           position: 'absolute',
           top: 'clamp(80px,10vh,100px)',
@@ -167,28 +187,27 @@ function SilhouettePanel({ bgImage, revealImage, index, medium, title, line, hre
           fontSize: '8px',
           letterSpacing: '0.2em',
           color: 'var(--cream)',
-          opacity: hovered ? 0 : 0.18,
+          opacity: 0.18,
           textTransform: 'uppercase',
-          transition: 'opacity 400ms ease',
           pointerEvents: 'none',
         }}>
-          Hover to reveal
+          {isTouch ? 'Scroll to reveal' : 'Hover to reveal'}
         </p>
       )}
     </div>
   )
 }
 
-// Use her actual artwork images — silhouetted with CSS, then revealed on hover.
-// The darkness IS her rose. The spotlight reveals it.
 const WORKS: Array<Omit<SilhouettePanelProps, 'index'>> = [
   {
-    bgImage: HER_WORK.sculptureRose,
-    revealImage: HER_WORK.sculptureRose,
-    medium: 'High-Relief Sculpture',
-    title: 'Rose in High Relief',
-    line: 'Petal by petal. Eleven days. Built from nothing into something that appears to have always existed.',
-    href: '/relics/rose-in-high-relief',
+    // Tanjore diptych — crop to just the top deity face (upper-left of the image)
+    bgImage: HER_WORK.tanjoureDiptych,
+    revealImage: HER_WORK.tanjoureDiptych,
+    bgPosition: '18% 22%',
+    medium: 'Tanjore Gold-Leaf · Deity Portrait · Chola Tradition',
+    title: 'The Deity in Gold',
+    line: 'Gold leaf pressed until it becomes the face, not the frame. Each feature built from Tanjore tradition handed down across centuries.',
+    href: '/relics/tanjore-commission',
   },
   {
     bgImage: HER_WORK.tanjoreMockup,
