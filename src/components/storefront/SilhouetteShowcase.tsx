@@ -203,7 +203,7 @@ const WORKS: Array<Omit<SilhouettePanelProps, 'index'>> = [
     // Tanjore diptych — crop to just the top deity face (upper-left of the image)
     bgImage: HER_WORK.tanjoureDiptych,
     revealImage: HER_WORK.tanjoureDiptych,
-    bgPosition: '18% 22%',
+    bgPosition: '45% 50%',
     medium: 'Tanjore Gold-Leaf · Deity Portrait · Chola Tradition',
     title: 'The Deity in Gold',
     line: 'Gold leaf pressed until it becomes the face, not the frame. Each feature built from Tanjore tradition handed down across centuries.',
